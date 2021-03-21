@@ -1,2 +1,10 @@
 haxe -hl hello.hl --main Main
+export LD_LIBRARY_PATH=.:..:$LD_LIBRARY_PATH
 ../hl hello.hl
+
+
+haxe -hl fib.hl --main Fib.hx
+export LD_LIBRARY_PATH=.:..:$LD_LIBRARY_PATH
+../hl fib.hl
+
+haxe -hl argv.hl --main Argv
