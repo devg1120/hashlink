@@ -28,8 +28,8 @@ ReleaseStatic
 /other/benchs/cpp
 /other/benchs/flashout.txt
 
-/bin*
-/build*
+/bin
+/build
 /other/memory/*.dump
 /src/_std
 /src/hl
