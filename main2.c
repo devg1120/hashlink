@@ -1,24 +1,3 @@
-/*
- * Copyright (C)2015-2016 Haxe Foundation
- *
- * Permission is hereby granted, free of charge, to any person obtaining a
- * copy of this software and associated documentation files (the "Software"),
- * to deal in the Software without restriction, including without limitation
- * the rights to use, copy, modify, merge, publish, distribute, sublicense,
- * and/or sell copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
- * DEALINGS IN THE SOFTWARE.
- */
 #include <hl.h>
 #include <hlmodule.h>
 
@@ -59,6 +38,8 @@ static int pfiletime( pchar *file )	{
 	return (int)st.st_mtime;
 #endif
 }
+
+#define HL_MAX_ARGS 9
 
 static hl_code *load_code( const pchar *file, char **error_msg, bool print_errors ) {
 	hl_code *code;
@@ -133,6 +114,18 @@ static void setup_handler() {
 }
 #endif
 
+// https://github.com/HaxeFoundation/hashlink/issues/253
+//
+static hl_field_lookup *obj_resolve_field( hl_type_obj *o, int hfield ) {
+	hl_runtime_obj *rt = o->rt;
+	do {
+		hl_field_lookup *f = hl_lookup_find(rt->lookup,rt->nlookup,hfield);
+		if( f ) return f;
+		rt = rt->parent;
+	} while( rt );
+	return NULL;
+}
+
 vdynamic* create_instance(hl_type* type, ...)
 {
   vdynamic* global = *(vdynamic**)type->obj->global_value;
@@ -168,12 +161,13 @@ vdynamic* create_instance(hl_type* type, ...)
   vclosure* ctorClosure = (vclosure*)hl_dyn_getp(globalObj, ctorField->hashed_name, &hlt_dyn);
 
   //ezUInt32 nargs = (ezUInt32)ctorClosure->t->fun->nargs;
-  HL_PRIM uint nargs = (ezUInt32)ctorClosure->t->fun->nargs;
+  HL_PRIM uint nargs = (HL_PRIM uint)ctorClosure->t->fun->nargs;
 
   va_list argPtr;
   va_start(argPtr, type);
   vdynamic* args[HL_MAX_ARGS + 1];
-  for (ezUInt32 i = 0; i < nargs; i++)
+  //for (ezUInt32 i = 0; i < nargs; i++)
+  for ( HL_PRIM uint i = 0; i < nargs; i++)
   {
     args[i] = va_arg(argPtr, vdynamic*);
   }

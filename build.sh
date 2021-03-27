@@ -20,10 +20,13 @@ ar crs libhlvm.a  src/code.o src/jit.o  src/module.o src/debugger.o src/profile.
 ## main.c + libhlvm.a
 
 #cc  -Wall -O3 -I src -msse2 -mfpmath=sse -std=c11 -I include -I include/pcre -I include/mikktspace -I include/minimp3 -D LIBHL_EXPORTS -m64 -fPIC -pthread -fno-omit-frame-pointer -o hl2  main.c  -L. -lhlvm -lhl -lm -Wl,-rpath,. -Wl,--export-dynamic -Wl,--no-undefined  -ldl
-cc  -w -O3 -I src -msse2 -mfpmath=sse -std=c11 -I include -I include/pcre -I include/mikktspace -I include/minimp3 -D LIBHL_EXPORTS -m64 -fPIC -pthread -fno-omit-frame-pointer -o hl_static  main.c  -L. -lhlvm -lhl -lm -Wl,-rpath,. -Wl,--export-dynamic -Wl,--no-undefined  -ldl
+
+#cc  -w -O3 -I src -msse2 -mfpmath=sse -std=c11 -I include -I include/pcre -I include/mikktspace -I include/minimp3 -D LIBHL_EXPORTS -m64 -fPIC -pthread -fno-omit-frame-pointer -o hl_static  main.c  -L. -lhlvm -lhl -lm -Wl,-rpath,. -Wl,--export-dynamic -Wl,--no-undefined  -ldl
 
 
 ## func call
 
-cc  -w -O3 -I src -msse2 -mfpmath=sse -std=c11 -I include -I include/pcre -I include/mikktspace -I include/minimp3 -D LIBHL_EXPORTS -m64 -fPIC -pthread -fno-omit-frame-pointer -o hl2  main2.c  -L. -lhlvm -lhl -lm -Wl,-rpath,. -Wl,--export-dynamic -Wl,--no-undefined  -ldl
+#   `obj_resolve_field' に対する定義されていない参照です
+#cc  -w -O3 -I src -msse2 -mfpmath=sse -std=c11 -I include -I include/pcre -I include/mikktspace -I include/minimp3 -D LIBHL_EXPORTS -m64 -fPIC -pthread -fno-omit-frame-pointer -o hl2  main2.c  -L. -lhlvm -lhl -lm -Wl,-rpath,. -Wl,--export-dynamic -Wl,--no-undefined  -ldl
 
+cc -w -O3 -I src -msse2 -mfpmath=sse -std=c11 -I include -I include/pcre -I include/mikktspace -I include/minimp3 -D LIBHL_EXPORTS -m64 -fPIC -pthread -fno-omit-frame-pointer -o hl3 src/code.o src/jit.o  src/module.o src/debugger.o src/profile.o main.c -L. -lhl -lm -Wl,-rpath,. -Wl,--export-dynamic -Wl,--no-undefined  -ldl

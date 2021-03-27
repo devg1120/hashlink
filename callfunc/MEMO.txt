@@ -1,0 +1,3 @@
+haxelib git callfunc https://github.com/chfoo/callfunc
+haxelib list
+haxe -lib callfunc safety unifill -hl main.hl -main Main
